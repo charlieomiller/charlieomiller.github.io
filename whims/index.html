@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: sans-serif;
-      max-width: 700px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 2rem;
     }
@@ -25,9 +25,25 @@
       display: block;
       margin: 1rem 0;
     }
+    #toggleViewBtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      padding: 0.5rem 1rem;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .collapsed .post > *:not(h1) {
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <button id="toggleViewBtn">Collapse View</button>
   <h1>hey BUDDY!!</h1>
   <p>check my post!!<p>
   <h2>Navigatory</h2>
@@ -35,19 +51,46 @@
   <div id="feed"></div>
   <div class="loader" id="loader">crappa quit it! loading 'em.</div>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
   <script>
     const feed = document.getElementById('feed');
     const loader = document.getElementById('loader');
+    const toggleViewBtn = document.getElementById('toggleViewBtn');
     // Big crappy frickin' list of all the .md files in order
     // I hope for a better solution one day, but this works for now
     const posts = [
       'posts/test_post1.md',
       'posts/test_post2.md',
-      'posts/test_post3.md'
+      'posts/test_post3.md',
+      'posts/test_post1 copy.md',
+      'posts/test_post2 copy.md',
+      'posts/test_post3 copy.md',
+      'posts/test_post1 copy 2.md',
+      'posts/test_post2 copy 2.md',
+      'posts/test_post3 copy 2.md',
+      'posts/test_post1 copy 3.md',
+      'posts/test_post2 copy 3.md',
+      'posts/test_post3 copy 3.md',
+      'posts/test_post1 copy 4.md',
+      'posts/test_post2 copy 4.md',
+      'posts/test_post3 copy 4.md',
+      'posts/test_post1 copy 5.md',
+      'posts/test_post2 copy 5.md',
+      'posts/test_post3 copy 5.md',
+      'posts/test_post1 copy 6.md',
+      'posts/test_post2 copy 6.md',
+      'posts/test_post3 copy 6.md',
+      'posts/test_post1 copy 7.md',
+      'posts/test_post2 copy 7.md',
+      'posts/test_post3 copy 7.md',
+      'posts/test_post1 copy 8.md',
+      'posts/test_post2 copy 8.md',
+      'posts/test_post3 copy 8.md'
     ];
 
     let currentIndex = 0;
     let loading = false;
+    let collapsed = false;
 
     async function loadNextPost() {
       if (loading || currentIndex >= posts.length) return; // return nothing if currently loading post or all posts have been loaded
@@ -55,7 +98,8 @@
 
       const res = await fetch(posts[currentIndex]);
       const md = await res.text();
-      const html = marked.parse(md)
+      const dirty = marked.parse(md)
+      const html = DOMPurify.sanitize(dirty);
 
       const article = document.createElement('div');
       article.className = 'post';
@@ -75,6 +119,12 @@
         loader.textContent = 'No more posts.';
       }
     }
+
+    toggleViewBtn.addEventListener('click', () => {
+      collapsed = !collapsed;
+      document.body.classList.toggle('collapsed', collapsed);
+      toggleViewBtn.textContent = collapsed ? 'Full View' : 'Collapse View';
+    });
 
     // Initial post
     loadNextPost();
