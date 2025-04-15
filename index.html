@@ -1,14 +1,52 @@
 <!DOCTYPE html>
 <html>
-<!img src = "Artboard 1.svg"/>
+<img src = "homepage.png"/>
 <head>
   <title>test WebbyWebby siticus</title>
   <meta charset="UTF-8" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow-x: hidden; /* prevent horizontal scroll */
+      background-color: black;
+      color: white; /* text color */
+    }
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+    /*video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }*/
+    img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain; /* or 'contain', depending on your goal */
+    }
+    .invisible-button {
+      position: absolute;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      /* Optional for debugging */
+      /* background: rgba(255, 0, 0, 0.3); */
+    }
+  </style>
 </head>
 <body>
+  <a class="invisible-button" 
+            style="top: 10%; left: 10%; width: 20%; height: 20%;" 
+            onclick="alert('Button clicked!')">
+  </a>
   <h1>hey buddies!!</h1>
   <p>this is my Awesome static site!!!<p>
-  <h2>Navigatory</h2>
+  <h2>all of this will be gone soon enough, navigate from here for now:</h2>
   <a href="/who_am_i/">WHO AM I?</a><br>
   <a href="/whims/">WHIMS</a><br>
   <a href="/past_glories/">PAST GLORIES</a><br>
