@@ -103,7 +103,7 @@
       'posts/test_post3 copy 7.md',
       'posts/test_post1 copy 8.md',
       'posts/test_post2 copy 8.md',
-      'posts/test_post3 copy 8.md'
+      'posts/test_post3 copy 8.md',
     ];
 
     let currentIndex = 0;
@@ -116,7 +116,7 @@
 
       const res = await fetch(posts[currentIndex]);
       const md = await res.text();
-      const dirty = marked.parse(md)
+      const dirty = marked.parse(md);
       const html = DOMPurify.sanitize(dirty);
 
       const article = document.createElement('div');
