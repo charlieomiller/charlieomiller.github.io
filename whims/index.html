@@ -3,12 +3,15 @@
 <head>
   <title>Whims</title>
   <meta charset="UTF-8" />
+  <link rel="stylesheet" href="/css/globals.css">
+  <link rel="stylesheet" href="/css/topbar.css">
   <style>
     body {
       font-family: sans-serif;
       max-width: 1200px;
       margin: 0 auto;
       padding: 2rem;
+      padding-top: calc(2rem + var(--topbar-height));
     }
     .post {
       border-bottom: 1px solid #ccc;
@@ -61,6 +64,8 @@
   </style>
 </head>
 <body>
+  <div id="topbar"></div>
+  <script src="/js/loadShared.js"></script>
   <button id="toggleViewBtn">Collapse View</button>
   <h1>hey BUDDY!!</h1>
   <p>check my post!!<p>
