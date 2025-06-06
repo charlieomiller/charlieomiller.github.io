@@ -1,57 +1,149 @@
 <!DOCTYPE html>
-<html>
-  <video autoplay muted loop id="pageSelector">
-    <source src="/assets/pingpong.mp4" type="video/mp4">
-  </video>
-  <title>test WebbyWebby siticus</title>
-  <meta charset="UTF-8" />
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow-x: hidden; /* prevent horizontal scroll */
-      background-color: black;
-      color: white; /* text color */
-    }
-    .container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-    img {
-      width: 100vw;
-      height: 100vh;
-      object-fit: contain;
-    }
-    .invisible-button {
-      position: absolute;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      /* for debugging */
-      /* background: rgba(255, 0, 0, 0.3); */
-    }
-  </style>
-</head>
-<body>
-  <a class="invisible-button" 
-            style="top: 10%; left: 10%; width: 20%; height: 20%;" 
-            onclick="alert('Button clicked!')">
-  </a>
-  <h1>hey buddies!!</h1>
-  <p>this is my Awesome static site!!!<p>
-  <h2>all of this will be gone soon enough, navigate from here for now:</h2>
-  <a href="/who_am_i/">WHO AM I?</a><br>
-  <a href="/whims/">WHIMS</a><br>
-  <a href="/past_glories/">PAST GLORIES</a><br>
-  <a href="/send_word/">SEND WORD</a>
-</body>
+<html lang="en">
+  <head>
+    <title>test WebbyWebby siticus</title>
+    <meta charset="UTF-8" />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: hidden; /* prevent horizontal scroll */
+        overflow-y: hidden /* vertical too */;
+        background-color: black;
+        color: white;
+      }
+      .video-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+      }
+      video {
+        max-width: 100vw;
+        max-height: 100vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        display: block;
+      }
+      .bubble-wrapper {
+        max-width: 100vw;
+        max-height: 100vh;
+        width: 19.14%;
+        height: 18%;
+        display: flex;
+        overflow: hidden;
+        position: absolute;
+        transform: translate(-145%, -288%);
+      }
+      .bubble-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .invisButton {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        /* background: transparent; */
+        border: none;
+        cursor: pointer;
+        z-index: 2;
+        background: rgba(255, 0, 0, 0.3);
+        border-radius: 50%; /* rounded jus cuz */
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class="video-wrapper">
+      <video src="/assets/guy_1.mp4" type="video/mp4" style="z-index: 0;" id="pageSelector" autoplay muted loop></video>
+      
+      <div id="buttonTL" class="bubble-wrapper">
+        <a onclick="alert('Button clicked!')" class="invisButton"></a>
+        <img src="/assets/frame001.png" id="imgTL">
+      </div>
+
+      <div id="buttonTR" class="bubble-wrapper">
+        <a onclick="alert('Button clicked!')" class="invisButton"></a>
+        <img src="/assets/frame001.png" id="imgTR">
+      </div>
+
+      <div id="buttonBL" class="bubble-wrapper">
+        <a onclick="alert('Button clicked!')" class="invisButton"></a>
+        <img src="/assets/frame001.png" id="imgBL">
+      </div>
+
+      <div id="buttonBR" class="bubble-wrapper">
+        <a onclick="alert('Button clicked!')" class="invisButton"></a>
+        <img src="/assets/frame001.png" id="imgBR">
+      </div>
+
+    </div>
+    
+    <script>
+
+      if (!HTMLVideoElement.prototype.requestVideoFrameCallback) {
+      console.error("requestVideoFrameCallback is not supported in this browser.");
+      // Fallback stuff here later + need to make fallback for if JS disabled
+      }
+
+      // Fetch the JSON position data
+      fetch('/assets/data/normalized_bubbleTrackingData.json')
+        .then(response => {
+          if(!response.ok) { throw new Error('network response when fetching tracking data farted out'); }
+          return response.json();
+        })
+        .then(data => {
+
+          // Now that we've loaded the JSON, let's shove the video syncing tracking jargon here instead of doing an async function... LOL!
+          const mainVideo = document.getElementById('pageSelector');
+          const buttonTL = document.getElementById('buttonTL');
+          const buttonTR = document.getElementById('buttonTR');
+          const buttonBL = document.getElementById('buttonBL');
+          const buttonBR = document.getElementById('buttonBR');
+
+          function onFrameButtonSync () { // Makes the 4 bubbles follow the motion tracking imported from After Effects
+
+            //if (frameCounter < frameCounterEnd) { frameCounter++; }
+            //else { frameCounter = 0; }
+            const frameCounter = Math.floor(mainVideo.currentTime * 12); // 12 b/c 12 fps
+            if (frameCounter <= frameCounterEnd) {
+              buttonTL.style.left = `${data.TL[frameCounter.toString()].x}%`;
+              buttonTL.style.top = `${data.TL[frameCounter.toString()].y}%`;
+              
+              buttonTR.style.left = `${data.TR[frameCounter.toString()].x}%`;
+              buttonTR.style.top = `${data.TR[frameCounter.toString()].y}%`;
+
+              buttonBL.style.left = `${data.BL[frameCounter.toString()].x}%`;
+              buttonBL.style.top = `${data.BL[frameCounter.toString()].y}%`;
+
+              buttonBR.style.left = `${data.BR[frameCounter.toString()].x}%`;
+              buttonBR.style.top = `${data.BR[frameCounter.toString()].y}%`;
+              //console.log(frameCounter, `${data.TL[frameCounter.toString()].x}%`, `${data.TL[frameCounter.toString()].y}%`);
+            }
+            mainVideo.requestVideoFrameCallback(onFrameButtonSync);
+
+          }
+          
+          //let frameCounter = 0;
+          const frameCounterEnd = 35; // Clay buddy has a 36 frame long animation. Since counter includes 0 we will stop at 35
+
+          mainVideo.requestVideoFrameCallback(onFrameButtonSync);
+
+        })
+        .catch(error => {
+          console.error('crud... error when fetching the tracking data: ', error)
+        });
+
+    </script>
+    <!--video id="WHO_AM_I?" class="bubble" src="/assets/frame001.png" autoplay loop muted></video>-->
+  </body>
 </html>
   
